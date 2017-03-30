@@ -694,7 +694,11 @@ static NSArray *RKInsertInMetadataList(NSArray *list, id metadata1, id metadata2
     }
     Class transformedValueClass = propertyMapping.propertyValueClass ?: [self.objectMapping classForKeyPath:propertyMapping.destinationKeyPath];
     if (! transformedValueClass) {
-        *outputValue = inputValue;
+        if (inputValue == nil || [inputValue isKindOfClass:NSNull.class]) {
+            *outputValue = nil;
+        } else {
+            *outputValue = inputValue;
+        }
         return YES;
     }
     RKLogTrace(@"Found transformable value at keyPath '%@'. Transforming from class '%@' to '%@'", propertyMapping.sourceKeyPath, NSStringFromClass([inputValue class]), NSStringFromClass(transformedValueClass));
